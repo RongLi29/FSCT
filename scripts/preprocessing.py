@@ -27,13 +27,15 @@ class Preprocessing:
         self.num_cpu_cores = parameters["num_cpu_cores"]
 
         self.output_dir, self.working_dir = make_folder_structure(self.directory + self.filename)
+        self.output_filetype = self.parameters["output_filetype"]
 
         self.point_cloud, headers, self.num_points_orig = load_file(
             filename=self.directory + self.filename,
             plot_centre=self.parameters["plot_centre"],
             plot_radius=self.parameters["plot_radius"],
             plot_radius_buffer=self.parameters["plot_radius_buffer"],
-            headers_of_interest=["x", "y", "z", "red", "green", "blue"],
+            # headers_of_interest=["x", "y", "z", "red", "green", "blue"],
+            headers_of_interest=self.parameters["headers_of_interest"],
             return_num_points=True,
         )
 
@@ -52,9 +54,9 @@ class Preprocessing:
         self.num_points_subsampled = self.point_cloud.shape[0]
 
         save_file(
-            self.output_dir + "working_point_cloud.las",
+            self.output_dir + "working_point_cloud" + self.output_filetype,
             self.point_cloud,
-            headers_of_interest=["x", "y", "z", "red", "green", "blue"],
+            headers_of_interest=headers,
         )
 
         self.point_cloud = self.point_cloud[:, :3]  # Trims off unneeded dimensions if present.

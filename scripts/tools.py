@@ -141,6 +141,18 @@ def load_file(
     elif file_extension == ".csv":
         pointcloud = np.array(pd.read_csv(filename, header=None, index_col=None, delim_whitespace=True))
 
+    elif file_extension == ".asc":
+        coord_headers = []
+        data = pd.read_table(filename,delimiter=" ",header=0)
+        header_names = data.columns.tolist()
+        if len(headers_of_interest) != 0:
+            output_headers = [col for col in headers_of_interest if col in header_names]
+            pointcloud = data[output_headers].to_numpy()
+        else:
+            pointcloud = data.iloc[:,:3].to_numpy()
+            output_headers =["X","Y","Z"]
+
+    
     original_num_points = pointcloud.shape[0]
 
     if plot_centre is None:
@@ -197,6 +209,12 @@ def save_file(filename, pointcloud, headers_of_interest=None, silent=False):
 
         elif filename[-4:] == ".csv":
             pd.DataFrame(pointcloud).to_csv(filename, header=None, index=None, sep=" ")
+            print("Saved to:", filename)
+        elif filename[-4:] == ".asc":
+            if len(headers_of_interest) != 0:
+                pd.DataFrame(pointcloud).to_csv(filename, header=headers_of_interest, index=None, sep=" ")
+            else:
+                pd.DataFrame(pointcloud).to_csv(filename, header=None, index=None, sep=" ")
             print("Saved to:", filename)
 
 

@@ -13,14 +13,21 @@ if __name__ == "__main__":
     If you have multiple point clouds and wish to enter plot coords for each, have a look at "run_with_multiple_plot_centres.py"
     """
     # point_clouds_to_process = directory_mode()
-    # point_clouds_to_process = ['full_path_to_your_point_cloud.las', 'full_path_to_your_second_point_cloud.las', etc.]
-    point_clouds_to_process = file_mode()
+    point_clouds_to_process = "J:\\TLS\\SingleScan\\Across-site\\L1\\JERC_J60_scan6_angles_class_voxels.asc"
+    # point_clouds_to_process = file_mode()
+    header_file = point_clouds_to_process.replace("_angles_class_voxels.asc","_headers.asc")
+    
+    with open(header_file,'r') as file:
+        lines = file.readlines()
+        shiftline = lines[9]
+        plot_center = list(map(float,shiftline.split()[:2]))
+        
 
-    for point_cloud_filename in point_clouds_to_process:
+    for point_cloud_filename in [point_clouds_to_process]:
         parameters = dict(
             point_cloud_filename=point_cloud_filename,
             # Adjust if needed
-            plot_centre=None,  # [X, Y] Coordinates of the plot centre (metres). If "None", plot_centre is computed based on the point cloud bounding box.
+            plot_centre=plot_center,  # [X, Y] Coordinates of the plot centre (metres). If "None", plot_centre is computed based on the point cloud bounding box.
             # Circular Plot options - Leave at 0 if not using.
             plot_radius=8,  # If 0 m, the plot is not cropped. Otherwise, the plot is cylindrically cropped from the plot centre with plot_radius + plot_radius_buffer.
             plot_radius_buffer=0,  # See README. If non-zero, this is used for "Tree Aware Plot Cropping Mode".
@@ -48,6 +55,8 @@ if __name__ == "__main__":
             delete_working_directory=True,  # Generally leave this on. Deletes the files used for segmentation after segmentation is finished.
             # You may wish to turn it off if you want to re-run/modify the segmentation code so you don't need to run pre-processing every time.
             minimise_output_size_mode=0,  # Will delete a number of non-essential outputs to reduce storage use.
+            output_filetype = ".asc", # setting the output file type 
+            headers_of_interest = ["X","Y","Z","I","dip_deg","azimuth"],
         )
 
         parameters.update(other_parameters)
