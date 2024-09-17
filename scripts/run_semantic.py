@@ -12,8 +12,15 @@ if __name__ == "__main__":
 
     If you have multiple point clouds and wish to enter plot coords for each, have a look at "run_with_multiple_plot_centres.py"
     """
+   
+    import sys
+
+    arg1 = sys.argv[1]
+
+    point_clouds_to_process = arg1
+   
     # point_clouds_to_process = directory_mode()
-    point_clouds_to_process = "J:\\TLS\\SingleScan\\Across-site\\L1\\JERC_J60_scan6_angles_class_voxels.asc"
+    # point_clouds_to_process = "J:\\TLS\\SingleScan\\Across-site\\L1\\JERC_J60_scan6_angles_class_voxels.asc"
     # point_clouds_to_process = file_mode()
     header_file = point_clouds_to_process.replace("_angles_class_voxels.asc","_headers.asc")
     

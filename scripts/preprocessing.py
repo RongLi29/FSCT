@@ -26,7 +26,10 @@ class Preprocessing:
         self.max_points_per_box = self.parameters["max_points_per_box"]
         self.num_cpu_cores = parameters["num_cpu_cores"]
 
-        self.output_dir, self.working_dir = make_folder_structure(self.directory + self.filename)
+        if self.creat_workingdir == True:
+            self.output_dir, self.working_dir = make_folder_structure(self.directory + self.filename)
+        else:
+            self.output_dir, self.working_dir = self.directory
         self.output_filetype = self.parameters["output_filetype"]
 
         self.point_cloud, headers, self.num_points_orig = load_file(
