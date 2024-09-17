@@ -22,10 +22,10 @@ if __name__ == "__main__":
             # Adjust if needed
             plot_centre=None,  # [X, Y] Coordinates of the plot centre (metres). If "None", plot_centre is computed based on the point cloud bounding box.
             # Circular Plot options - Leave at 0 if not using.
-            plot_radius=0,  # If 0 m, the plot is not cropped. Otherwise, the plot is cylindrically cropped from the plot centre with plot_radius + plot_radius_buffer.
+            plot_radius=8,  # If 0 m, the plot is not cropped. Otherwise, the plot is cylindrically cropped from the plot centre with plot_radius + plot_radius_buffer.
             plot_radius_buffer=0,  # See README. If non-zero, this is used for "Tree Aware Plot Cropping Mode".
             # Set these appropriately for your hardware.
-            batch_size=2,  # You will get CUDA errors if this is too high, as you will run out of VRAM. This won't be an issue if running on CPU only. Must be >= 2.
+            batch_size=16,  # You will get CUDA errors if this is too high, as you will run out of VRAM. This won't be an issue if running on CPU only. Must be >= 2.
             num_cpu_cores=0,  # Number of CPU cores you want to use. If you run out of RAM, lower this. 0 means ALL cores.
             use_CPU_only=False,  # Set to True if you do not have an Nvidia GPU, or if you don't have enough vRAM.
             # Optional settings - Generally leave as they are.
@@ -57,8 +57,8 @@ if __name__ == "__main__":
             # For standard use, just leave them all set to 1 except "clean_up_files".
             preprocess=1,  # Preparation for semantic segmentation.
             segmentation=1,  # Deep learning based semantic segmentation of the point cloud.
-            postprocessing=1,  # Creates the DTM and applies some simple rules to clean up the segmented point cloud.
-            measure_plot=1,  # The bulk of the plot measurement happens here.
-            make_report=1,  # Generates a plot report, plot map, and some other figures.
+            postprocessing=0,  # Creates the DTM and applies some simple rules to clean up the segmented point cloud.
+            measure_plot=0,  # The bulk of the plot measurement happens here.
+            make_report=0,  # Generates a plot report, plot map, and some other figures.
             clean_up_files=0,
         )  # Optionally deletes most of the large point cloud outputs to minimise storage requirements.
