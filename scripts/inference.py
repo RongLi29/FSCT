@@ -144,7 +144,7 @@ class SemanticSegmentation:
             print("\r" + str(num_boxes) + "/" + str(num_boxes))
         del outputb, out, batches, pos, output  # clean up anything no longer needed to free RAM.
         original_point_cloud, headers = load_file(
-            self.directory + self.filename_working, self.parameters["headers_of_interest"]
+            self.directory + self.filename_working, headers_of_interest = self.parameters["headers_of_interest"]
         )
         original_point_cloud[:, :2] = original_point_cloud[:, :2] - self.plot_centre
         self.output = choose_most_confident_label(self.output_point_cloud, original_point_cloud)
