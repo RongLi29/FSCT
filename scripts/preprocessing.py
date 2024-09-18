@@ -26,10 +26,14 @@ class Preprocessing:
         self.max_points_per_box = self.parameters["max_points_per_box"]
         self.num_cpu_cores = parameters["num_cpu_cores"]
 
-        if self.creat_workingdir == True:
+        if self.parameters["creat_outputdir"] == True:
             self.output_dir, self.working_dir = make_folder_structure(self.directory + self.filename)
         else:
-            self.output_dir, self.working_dir = self.directory
+            self.output_dir = self.directory
+            self.working_dir = self.directory +  "/working/"
+            if not os.path.isdir(self.working_dir):
+                os.makedirs(self.working_dir)
+        
         self.output_filetype = self.parameters["output_filetype"]
 
         self.point_cloud, headers, self.num_points_orig = load_file(
@@ -57,7 +61,7 @@ class Preprocessing:
         self.num_points_subsampled = self.point_cloud.shape[0]
 
         save_file(
-            self.output_dir + "working_point_cloud" + self.output_filetype,
+            self.output_dir + self.filename[:-4] + "_working_point_cloud" + self.output_filetype,
             self.point_cloud,
             headers_of_interest=headers,
         )
@@ -243,5 +247,5 @@ class Preprocessing:
         plot_summary["Num Points Trimmed PC"] = self.num_points_trimmed
         plot_summary["Num Points Subsampled PC"] = self.num_points_subsampled
 
-        plot_summary.to_csv(self.output_dir + "plot_summary.csv", index=False)
+        plot_summary.to_csv(self.output_dir + self.filename[:-4] + "_plot_summary.csv", index=False)
         print("Preprocessing done\n")

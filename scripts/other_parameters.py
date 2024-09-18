@@ -6,6 +6,7 @@
 other_parameters = dict(
     model_filename="model.pth",
     box_dimensions=[6, 6, 6],  # Dimensions of the sliding box used for semantic segmentation.
+    # box_dimensions=[4, 4, 4],  # Dimensions of the sliding box used for semantic segmentation.
     box_overlap=[0.5, 0.5, 0.5],  # Overlap of the sliding box used for semantic segmentation.
     min_points_per_box=1000,  # Minimum number of points for input to the model. Too few points and it becomes near impossible to accurately label them (though assuming vegetation class is the safest bet here).
     max_points_per_box=20000,  # Maximum number of points for input to the model. The model may tolerate higher numbers if you decrease the batch size accordingly (to fit on the GPU), but this is not tested.
@@ -24,7 +25,7 @@ other_parameters = dict(
     max_search_angle=30,
     min_cluster_size=30,  # Used for HDBSCAN clustering step. Recommend not changing for general use.
     cleaned_measurement_radius=0.2,  # During cleaning, this w
-    subsample=0,  # Generally leave this on, but you can turn off subsampling.
+    subsample=1,  # Generally leave this on, but you can turn off subsampling.
     subsampling_min_spacing=0.01,  # The point cloud will be subsampled such that the closest any 2 points can be is 0.01 m.
     minimum_CCI=0.3,  # Minimum valid Circuferential Completeness Index (CCI) for non-interpolated circle/cylinder fitting. Any measurements with CCI below this are deleted.
     min_tree_cyls=10,  # Deletes any trees with fewer than 10 cylinders (before the cylinder interpolation step).

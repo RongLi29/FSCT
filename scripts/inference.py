@@ -82,12 +82,17 @@ class SemanticSegmentation:
         self.filename = self.parameters["point_cloud_filename"].replace("\\", "/")
         self.directory = os.path.dirname(os.path.realpath(self.filename)).replace("\\", "/") + "/"
         self.filename = self.filename.split("/")[-1]
-        self.output_dir = self.directory + self.filename[:-4] + "_FSCT_output/"
-        self.working_dir = self.directory + self.filename[:-4] + "_FSCT_output/working_directory/"
+        if self.parameters["creat_outputdir"] == True:
+            self.output_dir = self.directory + self.filename[:-4] + "_FSCT_output/"
+            self.working_dir = self.directory + self.filename[:-4] + "_FSCT_output/working_directory/"
+        else:
+            self.output_dir = self.directory
+            self.working_dir = self.directory +  "/working/"
 
-        self.filename = "working_point_cloud" + self.parameters["output_filetype"]
+
+        self.filename_working = self.filename[:-4] + "_working_point_cloud" + self.parameters["output_filetype"]
         self.directory = self.output_dir
-        self.plot_summary = pd.read_csv(self.output_dir + "plot_summary.csv", index_col=None)
+        self.plot_summary = pd.read_csv(self.output_dir + self.filename[:-4] + "_plot_summary.csv", index_col=None)
         self.plot_centre = [[float(self.plot_summary["Plot Centre X"]), float(self.plot_summary["Plot Centre Y"])]]
 
     def inference(self):
@@ -101,14 +106,16 @@ class SemanticSegmentation:
         if self.parameters["use_CPU_only"]:
             model.load_state_dict(
                 torch.load(
-                    get_fsct_path("model") + "/" + self.parameters["model_filename"],
+                    #get_fsct_path("model") + "/" + self.parameters["model_filename"],
+                    self.parameters["FSCT_model_path"] + self.parameters["model_filename"], 
                     map_location=torch.device("cpu"),
                 ),
                 strict=False,
             )
         else:
             model.load_state_dict(
-                torch.load(get_fsct_path("model") + "/" + self.parameters["model_filename"]),
+                # torch.load(get_fsct_path("model") + "/" + self.parameters["model_filename"]),
+                torch.load(self.parameters["FSCT_model_path"] + self.parameters["model_filename"]),
                 strict=False,
             )
 
@@ -137,14 +144,14 @@ class SemanticSegmentation:
             print("\r" + str(num_boxes) + "/" + str(num_boxes))
         del outputb, out, batches, pos, output  # clean up anything no longer needed to free RAM.
         original_point_cloud, headers = load_file(
-            self.directory + self.filename, self.parameters["headers_of_interest"]
+            self.directory + self.filename_working, self.parameters["headers_of_interest"]
         )
         original_point_cloud[:, :2] = original_point_cloud[:, :2] - self.plot_centre
         self.output = choose_most_confident_label(self.output_point_cloud, original_point_cloud)
         self.output = np.asarray(self.output, dtype="float64")
         self.output[:, :2] = self.output[:, :2] + self.plot_centre
         save_file(
-            self.output_dir + "segmented" + self.parameters["output_filetype"],
+            self.output_dir + self.filename[:-4] + "_segmented" + self.parameters["output_filetype"],
             self.output,
             headers_of_interest = headers + ["label"],
         )
@@ -152,7 +159,7 @@ class SemanticSegmentation:
         self.sem_seg_end_time = time.time()
         self.sem_seg_total_time = self.sem_seg_end_time - self.sem_seg_start_time
         self.plot_summary["Semantic Segmentation Time (s)"] = self.sem_seg_total_time
-        self.plot_summary.to_csv(self.output_dir + "plot_summary.csv", index=False)
+        self.plot_summary.to_csv(self.output_dir + self.filename[:-4] + "_plot_summary.csv", index=False)
         print("Semantic segmentation took", self.sem_seg_total_time, "s")
         print("Semantic segmentation done")
         if self.parameters["delete_working_directory"]:

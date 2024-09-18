@@ -22,7 +22,8 @@ if __name__ == "__main__":
     # point_clouds_to_process = directory_mode()
     # point_clouds_to_process = "J:\\TLS\\SingleScan\\Across-site\\L1\\JERC_J60_scan6_angles_class_voxels.asc"
     # point_clouds_to_process = file_mode()
-    header_file = point_clouds_to_process.replace("_angles_class_voxels.asc","_headers.asc")
+    header_file = point_clouds_to_process.replace("_all_angles.asc","_headers.asc")
+    # header_file = point_clouds_to_process.replace("_angles_class_voxels.asc","_headers.asc")
     
     with open(header_file,'r') as file:
         lines = file.readlines()
@@ -63,8 +64,9 @@ if __name__ == "__main__":
             # You may wish to turn it off if you want to re-run/modify the segmentation code so you don't need to run pre-processing every time.
             minimise_output_size_mode=0,  # Will delete a number of non-essential outputs to reduce storage use.
             output_filetype = ".asc", # setting the output file type 
-            headers_of_interest = ["X","Y","Z","I","dip_deg","azimuth"],
-            creat_workingdir = False,
+            headers_of_interest = ["X","Y","Z","I","scatter","dip_deg","dipDir_deg"],
+            creat_outputdir = False,
+            FSCT_model_path = "F:\\Rong\\TLS-Rong\\leaf-wood-separation\\FSCT\\model\\",
         )
 
         parameters.update(other_parameters)

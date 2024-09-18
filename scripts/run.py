@@ -13,9 +13,12 @@ if __name__ == "__main__":
     If you have multiple point clouds and wish to enter plot coords for each, have a look at "run_with_multiple_plot_centres.py"
     """
     # point_clouds_to_process = directory_mode()
-    point_clouds_to_process = "J:\\TLS\\SingleScan\\Across-site\\L1\\JERC_J60_scan6_angles_class_voxels.asc"
+    point_clouds_to_process = "J:\\TLS\\SingleScan\\Across-site\\L1\\JERC_J60_scan6_all_angles.asc"
+    # point_clouds_to_process = "F:\\Rong\\TLS-Rong\\leaf-wood-separation\\testingdata\\JERC_J60_scan6_angles_class.asc"
+    
     # point_clouds_to_process = file_mode()
-    header_file = point_clouds_to_process.replace("_angles_class_voxels.asc","_headers.asc")
+    # header_file = point_clouds_to_process.replace("_angles_class_voxels.asc","_headers.asc")
+    header_file = point_clouds_to_process.replace("_all_angles.asc","_headers.asc")
     
     with open(header_file,'r') as file:
         lines = file.readlines()
@@ -57,7 +60,7 @@ if __name__ == "__main__":
             minimise_output_size_mode=0,  # Will delete a number of non-essential outputs to reduce storage use.
             output_filetype = ".asc", # setting the output file type 
             headers_of_interest = ["X","Y","Z","I","dip_deg","azimuth"],
-            creat_workingdir = False,
+            creat_outputdir = False,
         )
 
         parameters.update(other_parameters)
